@@ -1,7 +1,8 @@
 import * as React from "react";
-import { render, fireEvent, act, cleanup } from "@testing-library/react";
+import { render, fireEvent, act, cleanup, wait } from "@testing-library/react";
 import "@testing-library/jest-dom/extend-expect";
-import { RestaurantsList } from "../RestaurantsList";
+import * as API from "../../api";
+import { Restaurants } from "../Restaurants";
 
 const mockData = {
   restaurants: [
@@ -38,32 +39,82 @@ const mockData = {
   ]
 };
 
-describe("Containers tests", () => {
+beforeAll(() => {
+  const consoleError = console.error;
+  jest.spyOn(console, "error").mockImplementation((...args) => {
+    if (
+      !args[0].includes(
+        "Warning: An update to %s inside a test was not wrapped in act"
+      )
+    ) {
+      consoleError(...args);
+    }
+  });
+  API.getRestaurant = jest.fn(() => Promise.resolve(mockData.restaurants));
+});
+
+describe("Restaurants tests", () => {
   afterEach(cleanup);
 
-  test("should display Loader if restaurants list is empty ", async () => {
-    const { getByTestId } = render(<RestaurantsList restaurants={[]} />);
-    const Loader = await getByTestId("loading");
+  test("Should display Loader first when restaurants data is not leaoded yet", async () => {
+    const { getByTestId } = render(<Restaurants />);
+
+    const Loader = getByTestId("loading");
     expect(Loader).toBeInTheDocument();
   });
 
-  test("should display restaurants card list if restaurants is not empty ", async () => {
-    const { getByTestId, getAllByTestId } = render(
-      <RestaurantsList restaurants={mockData.restaurants} />
-    );
-    const restaurantsList = await getByTestId("restaurants-list");
-    const restaurantCards = await getAllByTestId("restaurant-card");
+  test("should display restaurants card list if restaurants data is leaoded ", async () => {
+    const { getByTestId, getAllByTestId } = render(<Restaurants />);
+
+    await wait();
+
+    const restaurantsList = getByTestId("restaurants-list");
+    const restaurantCards = getAllByTestId("restaurant-card");
 
     expect(restaurantsList).toBeInTheDocument();
     expect(restaurantCards).toHaveLength(2);
   });
 
-  test("should display restaurant name if restaurants list is provided", async () => {
-    const { getByText } = render(
-      <RestaurantsList restaurants={mockData.restaurants} />
-    );
+  test("Should display restaurant name if restaurants list is leaoded", async () => {
+    const { getByText } = render(<Restaurants />);
+
+    await wait();
+
     const restaurantName = await getByText(/Tanoshii Sushi/);
 
     expect(restaurantName).toBeInTheDocument();
+  });
+
+  test("Favorite-button should toggle color from grey to red after click", async () => {
+    const { getAllByTestId } = render(<Restaurants />);
+    await wait();
+    const favoriteButtons = await getAllByTestId("favorite-button");
+    const fireFavoriteButton = favoriteButtons[0];
+
+    expect(fireFavoriteButton).toBeInTheDocument();
+    expect(fireFavoriteButton).toHaveClass("ui grey button");
+
+    act(() => {
+      fireEvent.click(fireFavoriteButton);
+    });
+
+    expect(fireFavoriteButton).toHaveClass("ui red button");
+
+    act(() => {
+      fireEvent.click(fireFavoriteButton);
+    });
+
+    expect(fireFavoriteButton).toHaveClass("ui grey button");
+  });
+
+  test("Should display error if getRestaurant is rejected", async () => {
+    API.getRestaurant = jest.fn(() => Promise.reject("Error!"));
+
+    const { getByText } = render(<Restaurants />);
+
+    await wait();
+
+    const error = getByText("Error!");
+    expect(error).toBeInTheDocument();
   });
 });

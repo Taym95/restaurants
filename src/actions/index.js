@@ -1,7 +1,7 @@
-export const loadRestaurants = (data, dispatch) => {
+export const loadRestaurants = (restaurants, dispatch) => {
   dispatch({
     type: "INIT",
-    restaurants: data.restaurants
+    restaurants: restaurants
   });
 };
 

@@ -13,9 +13,14 @@ export const restaurantsReducer = (
     case "INIT":
       return {
         restaurants
-      };  
+      };
     case "FAVORITE":
-      return state;
+      return produce(state, draftState => {
+        draftState.restaurants.forEach(restaurant => {
+          if (restaurant.id === restaurantId)
+            restaurant.isFavorite = !restaurant.isFavorite;
+        });
+      });
     case "ERROR":
       return produce(state, draftState => {
         draftState.error = error;

@@ -21,7 +21,8 @@ const RestaurantCard = React.memo(
           </Card.Content>
           <Card.Content extra textAlign="right">
             <Button
-              color={isFavorite ? "red" : "blue"}
+              data-testid="favorite-button"
+              color={isFavorite ? "red" : "grey"}
               onClick={favoriteRestaurant}
             >
               <Icon name="heart" />

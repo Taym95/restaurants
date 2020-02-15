@@ -12,5 +12,5 @@ const cancellation = () => ({
 
 export const getRestaurant = async () => {
   const response = await myAxios.get(`restaurants/`, cancellation);
-  return response.data;
+  return response.data.restaurants;
 };
