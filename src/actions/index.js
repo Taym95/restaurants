@@ -18,3 +18,10 @@ export const favorite = (restaurantId, dispatch) => {
     restaurantId: restaurantId
   });
 };
+
+export const filter = (sortingValue, dispatch) => {
+  dispatch({
+    type: "FILTER",
+    sortingValue: sortingValue
+  });
+};

@@ -17,3 +17,16 @@ export const sortByStatus = (a, b) => {
     return 1;
   }
 };
+
+export const sortBySortingValues = (a, b, value) => {
+  if (value) {
+    var valueA = a.sortingValues[value];
+    var valueB = b.sortingValues[value];
+    if (valueA < valueB) {
+      return 1;
+    }
+    if (valueA > valueB) {
+      return -1;
+    }
+  }
+};

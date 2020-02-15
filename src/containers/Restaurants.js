@@ -31,7 +31,11 @@ const Restaurants = React.memo(() => {
       {state.error ? (
         <Error error={state.error} />
       ) : (
-        <RestaurantsList restaurants={state.restaurants} dispatch={dispatch} />
+        <RestaurantsList
+          restaurants={state.restaurants}
+          sortingValue={state.sortingValue}
+          dispatch={dispatch}
+        />
       )}
     </>
   );

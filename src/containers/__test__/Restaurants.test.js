@@ -141,6 +141,28 @@ describe("Restaurants tests", () => {
     expect(therdFavoriteCard).toHaveTextContent(/Lale Restaurant & Snackbar/);
   });
 
+  test("Should sort restaurants depending on selected sortingValue", async () => {
+    const { getAllByTestId, getByTestId, getByText } = render(<Restaurants />);
+
+    await wait();
+
+    const filterSortingValue = getByTestId("filter-sorting-value");
+
+    expect(filterSortingValue).toBeInTheDocument();
+
+    fireEvent.click(getByText("Newest"));
+
+    const restaurantCards = getAllByTestId("restaurant-card");
+    // check mockData.restaurants to validate test result
+    const fireFavoriteCard = restaurantCards[0];
+    const secondFavoriteCard = restaurantCards[1];
+    const therdFavoriteCard = restaurantCards[2];
+
+    expect(fireFavoriteCard).toHaveTextContent(/newest: 266/);
+    expect(secondFavoriteCard).toHaveTextContent(/newest: 96/);
+    expect(therdFavoriteCard).toHaveTextContent(/newest: 73/);
+  });
+
   test("Should display error if getRestaurant is rejected", async () => {
     API.getRestaurant = jest.fn(() => Promise.reject("Error!"));
 
