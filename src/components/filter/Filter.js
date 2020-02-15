@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Sidebar } from "semantic-ui-react";
+import { Menu, Sidebar, Input } from "semantic-ui-react";
 
 const Filter = () => {
   return (
@@ -11,12 +11,11 @@ const Filter = () => {
       visible={true}
     >
       <Menu.Item as="a" header>
-        Filter
+        Filters
       </Menu.Item>
-      <Menu.Item as="a">Share on Social</Menu.Item>
-      <Menu.Item as="a">Share by E-mail</Menu.Item>
-      <Menu.Item as="a">Edit Permissions</Menu.Item>
-      <Menu.Item as="a">Delete Permanently</Menu.Item>
+      <Menu.Item>
+        <Input focus placeholder="Search..." />
+      </Menu.Item>
     </Sidebar>
   );
 };

@@ -19,7 +19,8 @@ const mockData = {
         averageProductPrice: 1536,
         deliveryCosts: 200,
         minCost: 1000
-      }
+      },
+      isFavorite: false
     },
     {
       id: 2,
@@ -34,7 +35,24 @@ const mockData = {
         averageProductPrice: 1146,
         deliveryCosts: 150,
         minCost: 1300
-      }
+      },
+      isFavorite: true
+    },
+    {
+      id: 3,
+      name: "Lale Restaurant & Snackbar",
+      status: "order ahead",
+      sortingValues: {
+        bestMatch: 305,
+        newest: 73,
+        ratingAverage: 0,
+        distance: 2880,
+        popularity: 0,
+        averageProductPrice: 838,
+        deliveryCosts: 0,
+        minCost: 0
+      },
+      isFavorite: false
     }
   ]
 };
@@ -72,7 +90,7 @@ describe("Restaurants tests", () => {
     const restaurantCards = getAllByTestId("restaurant-card");
 
     expect(restaurantsList).toBeInTheDocument();
-    expect(restaurantCards).toHaveLength(2);
+    expect(restaurantCards).toHaveLength(3);
   });
 
   test("Should display restaurant name if restaurants list is leaoded", async () => {
@@ -89,22 +107,38 @@ describe("Restaurants tests", () => {
     const { getAllByTestId } = render(<Restaurants />);
     await wait();
     const favoriteButtons = await getAllByTestId("favorite-button");
-    const fireFavoriteButton = favoriteButtons[0];
+    const firstFavoriteButton = favoriteButtons[0];
 
-    expect(fireFavoriteButton).toBeInTheDocument();
-    expect(fireFavoriteButton).toHaveClass("ui grey button");
-
-    act(() => {
-      fireEvent.click(fireFavoriteButton);
-    });
-
-    expect(fireFavoriteButton).toHaveClass("ui red button");
+    expect(firstFavoriteButton).toBeInTheDocument();
+    expect(firstFavoriteButton).toHaveClass("ui red button");
 
     act(() => {
-      fireEvent.click(fireFavoriteButton);
+      fireEvent.click(firstFavoriteButton);
     });
 
-    expect(fireFavoriteButton).toHaveClass("ui grey button");
+    expect(firstFavoriteButton).toHaveClass("ui grey button");
+
+    act(() => {
+      fireEvent.click(firstFavoriteButton);
+    });
+
+    expect(firstFavoriteButton).toHaveClass("ui red button");
+  });
+
+  test("favorite restaurant should have priority in sorting then opening state​", async () => {
+    const { getAllByTestId } = render(<Restaurants />);
+
+    await wait();
+
+    const restaurantCards = getAllByTestId("restaurant-card");
+    // check mockData.restaurants to validate test result
+    const fireFavoriteCard = restaurantCards[0];
+    const secondFavoriteCard = restaurantCards[1];
+    const therdFavoriteCard = restaurantCards[2];
+
+    expect(fireFavoriteCard).toHaveTextContent(/Tandoori Express/);
+    expect(secondFavoriteCard).toHaveTextContent(/Tanoshii Sushi/);
+    expect(therdFavoriteCard).toHaveTextContent(/Lale Restaurant & Snackbar/);
   });
 
   test("Should display error if getRestaurant is rejected", async () => {
