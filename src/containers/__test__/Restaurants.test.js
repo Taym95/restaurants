@@ -18,7 +18,8 @@ const mockData = {
         popularity: 17,
         averageProductPrice: 1536,
         deliveryCosts: 200,
-        minCost: 1000
+        minCost: 1000,
+        topRestaurant: 20234.5
       },
       isFavorite: false
     },
@@ -34,7 +35,8 @@ const mockData = {
         popularity: 123,
         averageProductPrice: 1146,
         deliveryCosts: 150,
-        minCost: 1300
+        minCost: 1300,
+        topRestaurant: 283888.5
       },
       isFavorite: true
     },
@@ -50,7 +52,8 @@ const mockData = {
         popularity: 0,
         averageProductPrice: 838,
         deliveryCosts: 0,
-        minCost: 0
+        minCost: 0,
+        topRestaurant: 0
       },
       isFavorite: false
     }
@@ -161,6 +164,28 @@ describe("Restaurants tests", () => {
     expect(fireFavoriteCard).toHaveTextContent(/newest: 266/);
     expect(secondFavoriteCard).toHaveTextContent(/newest: 96/);
     expect(therdFavoriteCard).toHaveTextContent(/newest: 73/);
+  });
+
+  test("Sorting Values filter should have a new value topRestaurant", async () => {
+    const { getAllByTestId, getByTestId, getByText } = render(<Restaurants />);
+
+    await wait();
+
+    const filterSortingValue = getByTestId("filter-sorting-value");
+
+    expect(filterSortingValue).toBeInTheDocument();
+
+    fireEvent.click(getByText(/Top Restaurant/));
+
+    const restaurantCards = getAllByTestId("restaurant-card");
+    // check mockData.restaurants to validate test result
+    const fireFavoriteCard = restaurantCards[0];
+    const secondFavoriteCard = restaurantCards[1];
+    const therdFavoriteCard = restaurantCards[2];
+
+    expect(fireFavoriteCard).toHaveTextContent(/topRestaurant: 283888.5/);
+    expect(secondFavoriteCard).toHaveTextContent(/topRestaurant: 20234.5/);
+    expect(therdFavoriteCard).toHaveTextContent(/topRestaurant: 0/);
   });
 
   test("Should filter restaurants depending on input searchValue", async () => {

@@ -5,6 +5,11 @@ let restaurants = require("../db/restaurants.json");
 const app: express.Application = express();
 const port = process.env.PORT || 9000;
 
+const topRestaurants = restaurant =>
+  (restaurant.sortingValues.topRestaurant =
+    restaurant.sortingValues.distance * restaurant.sortingValues.popularity +
+    restaurant.sortingValues.ratingAverage);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(function(req, res, next) {
@@ -22,6 +27,9 @@ app.use(function(req, res, next) {
 
 app.get("/", (req, res) => res.send("Restaurants API"));
 
-app.get("/restaurants", (req, res) => res.send(restaurants));
+app.get("/restaurants", (req, res) => {
+  restaurants.restaurants.forEach(topRestaurants);
+  res.send(restaurants);
+});
 
 app.listen(port, () => console.log(`Listening on port ${port}!`));

@@ -11,7 +11,8 @@ const options = [
   { key: 5, text: "Popularity", value: "popularity" },
   { key: 6, text: "Average product price", value: "averageProductPrice" },
   { key: 7, text: "Delivery costs", value: "deliveryCosts" },
-  { key: 8, text: "Min cost", value: "minCost" }
+  { key: 8, text: "Min cost", value: "minCost" },
+  { key: 9, text: "Top Restaurant", value: "topRestaurant" }
 ];
 
 const Filter = ({ dispatch }) => {
