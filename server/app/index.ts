@@ -1,9 +1,11 @@
 import express = require("express");
+const path = require("path");
 
 let restaurants = require("../db/restaurants.json");
 
 const app: express.Application = express();
 const port = process.env.PORT || 9000;
+app.use(express.static(path.join(__dirname, "../../build")));
 
 const topRestaurants = restaurant =>
   (restaurant.sortingValues.topRestaurant =
@@ -25,7 +27,9 @@ app.use(function(req, res, next) {
   next();
 });
 
-app.get("/", (req, res) => res.send("Restaurants API"));
+app.get("/", function(req, res) {
+  res.sendFile(path.join(__dirname, "../../build", "index.html"));
+});
 
 app.get("/restaurants", (req, res) => {
   restaurants.restaurants.forEach(topRestaurants);
