@@ -210,6 +210,26 @@ describe("Restaurants tests", () => {
     expect(restaurantCard).toHaveTextContent(/Tanoshii Sushi/);
   });
 
+  test("Should listen to the window.resize event and change sidebar width depends on windows.innerWidth value", async () => {
+    const { getByTestId } = render(<Restaurants />);
+
+    await wait();
+
+    const sidebare = getByTestId("sidebare");
+
+    // width="wide" large screen
+    expect(sidebare).toHaveClass("wide");
+
+    // Change the viewport to 500px.
+    global.innerWidth = 500;
+
+    // Trigger the window resize event.
+    global.dispatchEvent(new Event("resize"));
+
+    // width="thin" small screen
+    expect(sidebare).toHaveClass("thin");
+  });
+
   test("Should display error if getRestaurant is rejected", async () => {
     API.getRestaurant = jest.fn(() => Promise.reject("Error!"));
 
