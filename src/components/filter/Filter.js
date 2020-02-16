@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { Menu, Sidebar, Input, Dropdown } from "semantic-ui-react";
-import { filter } from "../../actions";
+import { debounce } from "lodash";
+import { filter, search } from "../../actions";
 
 const options = [
   { key: 1, text: "Best Match", value: "bestMatch" },
@@ -14,8 +15,16 @@ const options = [
 ];
 
 const Filter = ({ dispatch }) => {
+  // if we are asking data from server firing a request on every character entered results in 429's (rate limit exceeded).
+  // Throttling/debouncing the input should help to solve this.
+  const handlerSearch = useCallback(debounce(search, 300), []);
+
   const onSortingValueChange = (e, sortingValue) => {
     filter(sortingValue.value, dispatch);
+  };
+
+  const onSearchChange = (e, searchValue) => {
+    handlerSearch(searchValue.value, dispatch);
   };
   return (
     <Sidebar
@@ -29,7 +38,12 @@ const Filter = ({ dispatch }) => {
         Filters
       </Menu.Item>
       <Menu.Item>
-        <Input focus placeholder="Search..." />
+        <Input
+          data-testid="search"
+          focus
+          placeholder="Search..."
+          onChange={onSearchChange}
+        />
       </Menu.Item>
       <Menu.Item>Sorting Value:</Menu.Item>
       <Menu.Item>

@@ -30,3 +30,10 @@ export const sortBySortingValues = (a, b, value) => {
     }
   }
 };
+
+export const searchFilter = (restaurant, searchValue) => {
+  if (searchValue !== null && searchValue.length !== 0) {
+    return restaurant.name.includes(searchValue);
+  }
+  return restaurant;
+};

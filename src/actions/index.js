@@ -25,3 +25,10 @@ export const filter = (sortingValue, dispatch) => {
     sortingValue: sortingValue
   });
 };
+
+export const search = (searchValue, dispatch) => {
+  dispatch({
+    type: "SEARCH",
+    searchValue: searchValue
+  });
+};

@@ -2,19 +2,19 @@ import { produce } from "immer";
 
 export const restaurantsInitialState = {
   restaurants: [],
-  sortingValue: null,
+  filter: { searchValue: null, sortingValue: null },
   error: null
 };
 
 export const restaurantsReducer = (
   state,
-  { type, restaurants, restaurantId, error, sortingValue }
+  { type, restaurants, restaurantId, error, sortingValue, searchValue }
 ) => {
   switch (type) {
     case "INIT":
-      return {
-        restaurants
-      };
+      return produce(state, draftState => {
+        draftState.restaurants = restaurants;
+      });
     case "FAVORITE":
       return produce(state, draftState => {
         draftState.restaurants.forEach(restaurant => {
@@ -24,7 +24,11 @@ export const restaurantsReducer = (
       });
     case "FILTER":
       return produce(state, draftState => {
-        draftState.sortingValue = sortingValue;
+        draftState.filter.sortingValue = sortingValue;
+      });
+    case "SEARCH":
+      return produce(state, draftState => {
+        draftState.filter.searchValue = searchValue;
       });
     case "ERROR":
       return produce(state, draftState => {

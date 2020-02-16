@@ -163,6 +163,28 @@ describe("Restaurants tests", () => {
     expect(therdFavoriteCard).toHaveTextContent(/newest: 73/);
   });
 
+  test("Should filter restaurants depending on input searchValue", async () => {
+    const { getAllByTestId, getByPlaceholderText } = render(<Restaurants />);
+
+    await wait();
+
+    const search = getByPlaceholderText("Search...");
+
+    expect(search).toBeInTheDocument();
+
+    act(() => {
+      fireEvent.change(search, { target: { value: "Sushi" } });
+    });
+
+    await new Promise(r => setTimeout(r, 300));
+
+    const restaurantCards = getAllByTestId("restaurant-card");
+    const restaurantCard = restaurantCards[0];
+
+    expect(restaurantCards).toHaveLength(1);
+    expect(restaurantCard).toHaveTextContent(/Tanoshii Sushi/);
+  });
+
   test("Should display error if getRestaurant is rejected", async () => {
     API.getRestaurant = jest.fn(() => Promise.reject("Error!"));
 

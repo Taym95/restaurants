@@ -33,7 +33,7 @@ const Restaurants = React.memo(() => {
       ) : (
         <RestaurantsList
           restaurants={state.restaurants}
-          sortingValue={state.sortingValue}
+          filter={state.filter}
           dispatch={dispatch}
         />
       )}
